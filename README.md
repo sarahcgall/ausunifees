@@ -95,9 +95,9 @@ Over the past decade, although students have not had a decrease in the amount th
 
 The following plots show the change in the maximum student contribution by funding cluster band year.
 
-![FundingChangePlot](https://github.com/sarahcgall/auscampaigntweets/blob/master/figs/FundingChangePlot.png)
+![FundingChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FundingChangePlot.png)
 
-![ChangePlot](https://github.com/sarahcgall/auscampaigntweets/blob/master/figs/ChangePlot.png)
+![ChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/ChangePlot.png)
 
 
 
