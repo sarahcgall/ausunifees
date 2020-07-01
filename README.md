@@ -11,7 +11,6 @@ Under this package, the Australian Government has proposed a series of measures,
 3. The provision of an additional 39,000 Commonwealth Supported Places by 2023.
 
 
-## Policy background
 #### How does the current system work?
 
 In Australia, universities can offer prospective students a Commonwealth Supported Place (CSP) or a full-fee paying place. While full-fee paying places require the student to pay for the full cost of their degree, CSP students benefit from a government subsidy through the Commonwealth Grant Scheme. Under this scheme, the government contributes a portion of the total cost of the students' degree which the student does not have to pay back. This means, CSP students are only required to pay back their portion of the overall costs of their degree (*[Commonwealth supported places (CSPs), Study Assist, Australian Government](https://www.studyassist.gov.au/help-loans/commonwealth-supported-places-csps)*). 
@@ -44,7 +43,6 @@ Each year under the Commonwealth Grant Scheme, the Australian Government allocat
 
 
 
-## Proposed changes to university fees
 #### How is the system changing?
 Under the proposed redesign of the funding arrangements, the funding has been consolidated into four clusters. 
 
@@ -84,6 +82,10 @@ An analysis of the overall cost of teaching each course, the emerging  employmen
 
 (*[Job-ready Graduates Package discussion paper, Department of Education, Skills and Employment](https://www.dese.gov.au/system/files/doc/other/job-ready_graduates_discussion_paper.pdf)*)
 
+XXX
+
+![FTESalaryPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FTESalaryPlot.png)
+
 
 The following plot shows the Commonwealth and maximum student contribution amounts for each part funding cluster between 2009 and the projected 2021 proposal. It demonstrates a reduction in course costs for students studying agriculture (*-\$5,827*), allied health (*-\$1,827*), clinical psychology (*-\$2,984*), computing, built environment and other health (*-\$1,827*), education (*-\$2,984*), english (*-\$2,984*), environmental studies (*-\$1,827*), languages (*-\$2,984*), mathematics and statistics (*-\$5,827*), nursing (*-\$2,984*), science, engineering and surveying (*-\$1,827*). It also demonstrates an increase in course costs for students studying behavioural science and political science (*+\$7,816*), communications (*+\$7,816*), creative arts (*+\$1,016*), humanities (*+\$7,816*), and law, accounting, administration, economics and commerce (*+\$3,345*).
 
@@ -91,17 +93,17 @@ The following plot shows the Commonwealth and maximum student contribution amoun
 
 
 #### What changes have occurred previously?
-Over the past decade, although students have not had a decrease in the amount that they contribute to their course costs, they have benefitted from few changes with indexed rate increases. This however, is with the exception of four increases above the indexed rates in 2010 and 2013 under the then-Labor Government. These increases affected students studying nursing (*+\$1,148 (+28%)*), eduction (*+\$1,148 (+28%)*), science, engineering and surveying (*+\$2,078 (+33%)*), and mathematics and statistics (*+\$3,843 (+85%)*). 
-
-The following plots show the change in the maximum student contribution by funding cluster band year.
+Over the past decade, although students have not had a decrease in the amount that they contribute to their course costs, they have benefitted from few changes with indexed rate increases. 
 
 ![FundingChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FundingChangePlot.png)
+
+This however, is with the exception of four increases above the indexed rates in 2010 and 2013 under the then-Labor Government. These increases affected students studying nursing (*+\$1,148 (+28%)*), eduction (*+\$1,148 (+28%)*), science, engineering and surveying (*+\$2,078 (+33%)*), and mathematics and statistics (*+\$3,843 (+85%)*). 
 
 ![ChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/ChangePlot.png)
 
 
 
-###### Why did these changes occur?
+#### Why did these changes occur?
 In 2005, following the [Nelson review](https://www.voced.edu.au/content/ngv%3A13176) which identified the need for a reform to higher education, the Coalition Government increased the cost of student contributions by a maximum of 25%. Those studying education and nursing were exempt from this increase as they had been identified as national priorities (*[Our universities, backing Australia's future, Nelson, 2003](https://www.voced.edu.au/content/ngv%3A38781)*). At the time, the ALP resolved to reverse the 25% increase (*[National Platform and Constitution, ALP, 2004](https://parlinfo.aph.gov.au/parlInfo/download/library/partypol/1024534/upload_binary/1024534.pdf;fileType=application%2Fpdf#search=%22library/partypol/1024534%22)*).
 
 
@@ -112,6 +114,18 @@ During the 2007 election campaign, Kevin Rudd MP, then-Labor Opposition Leader, 
 (*[New Directions for Maths and Science, Kevin Rudd MP & Stephen Smith MP, 2007](https://parlinfo.aph.gov.au/parlInfo/download/library/partypol/4X2M6/upload_binary/4x2m63.pdf;fileType=application%2Fpdf#search=%22library/partypol/4X2M6%22)*).
 
 This election commitment was honoured and subsequently implemented on 1 January 2009, reducing the student contribution for those studying maths and sciences from \$7,260 to \$4,077 (*[Higher Education Support Amendment (2008 Budget Measures) Act 2008](https://www.legislation.gov.au/Details/C2008A00043)*).
+
+
+The following plots show the immediate affect that reducing the student contribution from science and mathematics had on enrolment numbers. The broad natural and physical sciences discipline, in which sciences and mathematics fall within, increased the number of commencing student (first year students) enrolments by 13.2% in 2009 and 14.3% in 2010. The number of not commencing student (second and third year students) enrolments increased by 5.5% in 2010 and 8.6% in 2011. The number of award course completions (graduating students) also increased by 5.9% in 2010 and 5.4% in 2011.
+
+![EnrolmentsPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/EnrolmentsPlot.png)
+
+In the annual higher education report on undergraduate applications, offers and acceptances in 2010, the Department of Education, Employment and Workplace Relations stated that the immediate growth in natural and physical sciences enrolments followed the decision by the Labor Party to incentivise students by reducing their student contribution.
+
+> *The previous two years’ growth more than reversed the declines in demand for this field between 2004 and 2008...This increase in demand followed a suite of measures introduced in the 2008-09 Budget designed to encourage enrolments in mathematics and science and take-up in related occupations, including that the maximum student contribution for commencing students studying maths and science was lowered from $7412 to $4162 from 1 January 2009*
+
+(*[Undergraduate Applications, Offers and Acceptances, Department of Education, Employment and Workplace Relations, 2010](https://web.archive.org/web/20120229181048/http://www.deewr.gov.au/HigherEducation/Publications/HEReports/Documents/UndergradAppsOffersAccept2010.pdf)*).
+
 
 
 
@@ -154,4 +168,4 @@ The csv was then uploaded, stored and cleaned in a single dataframe, `funding_da
 2. Creating new variables - `Type`, `Total contribution` and `Funding ratio`.
 
 
-***Variables included:*** funding year (`Year`); if the funding is under the old or new funding arrangements (`Type`); the original funding cluster number (`Original funding cluster`); the original funding cluster description (`Original funding cluster description`); the original part of funding cluster (`Original part of funding cluster`); the matched 2020 funding cluster number (`2020 funding cluster`); the matched 2020 funding cluster description (`2020 funding cluster description`); the number of commencing students enrolled by field of education (`Student enrolments: commencing students`); the number of not commencing students enrolled by field of education (`Student enrolments: not commencing students`); the number of award course completions by field of education (`Award course completions`); the matched broad field of education (`Broad field of eduction`); the matched broad study area (`Study area`); the matched 2020 part funding cluster description (`Part funding cluster`); the unit of study description (`Unit description`); the field of education code (`Field of education code`); the maximum student contribution amounts (`Maximum student contribution amounts`); the Commonwealth contribution amounts (`Commonwealth contribution amounts`); the total contribution amount (Commonwealth + student) (`Total contribution`); and funding ratio (student/Commonwealth) (`Funding ratio`).
+***Variables included:*** funding year (`Year`); if the funding is under the old or new funding arrangements (`Type`); the original funding cluster number (`Original funding cluster`); the original funding cluster description (`Original funding cluster description`); the original part of funding cluster (`Original part of funding cluster`); the matched 2020 funding cluster number (`2020 funding cluster`); the matched 2020 funding cluster description (`2020 funding cluster description`); the matched broad field of education (`Broad field of eduction`); the number of commencing students enrolled by field of education (`Student enrolments: commencing students`); the number of not commencing students enrolled by field of education (`Student enrolments: not commencing students`); the number of award course completions by field of education (`Award course completions`); the matched broad study area (`Study area`); proportion of FTE one year after graduation (`FTE +1yr (%)`); proportion of overall employment one year after graduation (`Overall Empl. +1yr (%)`); median starting salary one year after graduation (`Median starting salary +1yr ($)`); the matched 2020 part funding cluster description (`Part funding cluster`); the unit of study description (`Unit description`); the field of education code (`Field of education code`); the maximum student contribution amounts (`Maximum student contribution amounts`); the Commonwealth contribution amounts (`Commonwealth contribution amounts`); the total contribution amount (Commonwealth + student) (`Total contribution`); and funding ratio (student/Commonwealth) (`Funding ratio`).

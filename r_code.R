@@ -7,6 +7,8 @@ library(tabulizer)
 library(extrafont)
 library(scales)
 library(networkD3)
+library(ggpubr)
+library(forcats)
 #============================================================#
 
 
@@ -49,7 +51,10 @@ funding_data <- cleaned_data %>%
          `Commonwealth contribution amounts` = str_remove_all(`Commonwealth contribution amounts`, ","),
          `Commonwealth contribution amounts` = as.numeric(str_remove_all(`Commonwealth contribution amounts`, "\\$"))) %>% 
   mutate(`Total contribution` = `Maximum student contribution amounts`+`Commonwealth contribution amounts`, 
-         `Funding ratio` = `Maximum student contribution amounts`/`Total contribution`)
+         `Funding ratio` = `Maximum student contribution amounts`/`Total contribution`) %>%
+  mutate(`FTE +1yr (%)` = `FTE +1yr (%)`/100,
+         `Overall Empl. +1yr (%)` = `Overall Empl. +1yr (%)`/100,
+         `Median starting salary +1yr ($)` = `Median starting salary +1yr ($)`*1000)
 
 #============================================================#
 
@@ -171,6 +176,7 @@ nodes <- data.frame(
 links$IDsource <- match(links$source, nodes$name)-1
 links$IDtarget <- match(links$target, nodes$name)-1
 
+
 sankeyNetwork(Links = links, Nodes = nodes,
               Source = "IDsource", 
               Target = "IDtarget",
@@ -201,8 +207,10 @@ funding_data %>%
   group_by(`Part funding cluster`, Type) %>% 
   summarise(mean = mean(`Total contribution`))
 
+
+
 #Create plot: Student Funding per year per cluster
-ggplot(funding_data %>%  
+ggplot_build(ggplot(funding_data %>%  
          filter(Type == "Old") %>%
          group_by(`Part funding cluster`, Year) %>% 
          summarise(mean = mean(`Total contribution`)),
@@ -252,7 +260,8 @@ ggplot(funding_data %>%
   facet_wrap(~`Part funding cluster`) +
   labs(x="Funding year", 
        y="Funding contribution ($)", 
-       title = "University course fees: student and Commonwealth contribution amounts by funding cluster and year") +
+       title = "University course fees: student and Commonwealth contribution amounts by funding cluster and year",
+       caption = "Source: DESE | Created by: @sarahcgall_") +
   theme(
     plot.margin = margin(1,1,1,1, "cm"),
     plot.background = element_rect(
@@ -261,6 +270,7 @@ ggplot(funding_data %>%
     plot.title = element_text(face = "plain", size = 14, family = "Calibri Light", hjust = 0.5, vjust = 3),
     axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
     axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
     legend.position = c(1, 0),
     legend.justification = c(1, 0),
     legend.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
@@ -268,7 +278,7 @@ ggplot(funding_data %>%
     strip.text.x = element_text(face = "plain", size = 8.6, family = "Calibri Light"),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank()
-  )
+  ))
   
 #============================================================#
 
@@ -339,7 +349,8 @@ ggplot(data=funding_data %>%
   facet_wrap(~`Part funding cluster`) +
   labs(x="Funding year", 
        y="Funding contribution (%)", 
-       title = "University course fees: proportion of maximum student contribution by funding cluster and year") +
+       title = "University course fees: proportion of maximum student contribution by funding cluster and year",
+       caption = "Source: DESE | Created by: @sarahcgall_") +
   theme(
     plot.margin = margin(1,1,1,1, "cm"),
     plot.background = element_rect(
@@ -348,6 +359,7 @@ ggplot(data=funding_data %>%
     plot.title = element_text(face = "plain", size = 14, family = "Calibri Light", hjust = 0.5, vjust = 3),
     axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
     axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
     legend.position = c(1, 0),
     legend.justification = c(1, 0),
     legend.background = element_rect(colour = "white"),
@@ -355,8 +367,7 @@ ggplot(data=funding_data %>%
     legend.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
     strip.text.x = element_text(face = "plain", size = 8.6, family = "Calibri Light"),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    
+    panel.grid.minor.x = element_blank()
   )
 
 #============================================================#
@@ -364,6 +375,96 @@ ggplot(data=funding_data %>%
 
 
 #======================ANALYSIS 3============================#
+#                
+#============================================================#
+#Import data
+gosl_data <- read_csv("C:/Users/Sarah/RProjects/ausunifees/cleaned/GOS L.csv", col_names = TRUE)
+gosl2_data <- read_csv("C:/Users/Sarah/RProjects/ausunifees/cleaned/GOSL_FTE.csv", col_names = TRUE)
+gos_data <- read_csv("C:/Users/Sarah/RProjects/ausunifees/cleaned/GOS.csv", col_names = TRUE)
+
+#Create plot: Proportion of FTE, 1 & 4 years after graduation by study area, 2015
+gosl2_data %>%
+  filter(`Study area` != "All study areas") %>%
+  mutate(`Study area` = fct_reorder(`Study area`, `FTE (%)   +3 months`, min)) %>%
+  ggplot(aes(`Study area`, `FTE (%)   +3 months`, colour =  "blue", size = `FTE median salary ($)   +3 months`)) +
+  geom_point(stat = "identity", fill = NA, shape = 1, stroke = 1.25) +
+  geom_point(data = gosl2_data %>%
+               filter(`Study area` != "All study areas") %>%
+               mutate(`Study area` = fct_reorder(`Study area`, `FTE (%)   +3 months`, min)),
+             aes(`Study area`, `FTE (%)  +3-4 years`, colour =  "red", size = `FTE median salary ($)  +3-4 years`),
+             stat = "identity", fill = NA, shape = 1, stroke = 1.25) +
+  scale_colour_manual(name = "Time after graduation", 
+                      values = c("blue"="#00BFC4", "red"="#F8766D"), 
+                      labels = c("+3 months","+3-4 years"), 
+                      drop = FALSE) +
+  scale_size_continuous(name = "Median starting salary ($)") +
+  facet_wrap(~Year) +
+  labs(x="", 
+       y="FTE (%)", 
+       title = "Proportion of graduates in full-time employment (FTE) and median starting salary, 3 months & 3-4 years after graduation by study area",
+       caption = "Source: QILT | Created by: @sarahcgall_") +
+  coord_flip() +
+  theme(
+    plot.margin = margin(1,1,1,1, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 14, family = "Calibri Light", hjust = 0.5, vjust = 3),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
+    legend.position = "bottom",
+    legend.background = element_rect(colour = "white"),
+    legend.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    legend.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    strip.text.x = element_text(face = "plain", size = 8.6, family = "Calibri Light"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+
+ 
+geom_segment(aes(x= `Study area`, 
+                 y = `FTE (%)   +3 months`+0.6, 
+                 xend = `Study area`, 
+                 yend = `FTE (%)  +3-4 years`-1.1),
+             size = 1, alpha = 0.5, arrow = arrow(length = unit(0.3, "cm")))
+ 
+#Create plot: Proportion of FTE, 1 & 4 years after graduation by study area, 2015
+gosl_data %>%
+  filter(`Study area` != "All study areas") %>%
+  arrange(desc(`FTE Extent to which skills and education not fully utilised (%)`)) %>%
+  ggplot(aes(`Study area`, `FTE Extent to which skills and education not fully utilised (%)`, fill = `Study area`)) +
+  geom_bar(stat = "identity") +
+  facet_grid(Type~`Years after graduation`) +
+  scale_y_continuous(limit = c(0,70), expand = c(0,0)) +
+  labs(x="", 
+       y="FTE (%)", 
+       title = "Proportion of FTE, 1 & 4 years after graduation by study area, 2015",
+       fill = "Years after graduation",
+       caption = "Source: DESE | Created by: @sarahcgall_") +
+  coord_flip() +
+  theme(
+    plot.margin = margin(1,1,1,1, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 14, family = "Calibri Light", hjust = 0.5, vjust = 3),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    axis.text.x = element_text(angle = 90),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
+    legend.position = "none",
+    strip.text.x = element_text(face = "plain", size = 8.6, family = "Calibri Light"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+
+
+#============================================================#
+
+
+
+#======================ANALYSIS 4============================#
 #      Change in student contribution per cluster ($)
 #============================================================#
 #Clean data for plot: Change in student contribution per cluster ($)
@@ -445,7 +546,8 @@ ggplot(data=student_funding1 %>%
   coord_flip() +
   facet_wrap(~Year) +
   labs(y="Change in funding contribution ($)", 
-       title = "University course fees: change in maximum student contribution by funding cluster and year") +
+       title = "University course fees: change in maximum student contribution by funding cluster and year",
+       caption = "Source: DESE | Created by: @sarahcgall_") +
   theme(
     plot.margin = margin(1,1,1,1, "cm"),
     plot.background = element_rect(
@@ -455,6 +557,7 @@ ggplot(data=student_funding1 %>%
     axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
     axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
     axis.title.y = element_blank(),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
     legend.position = "bottom",
     legend.background = element_rect(colour = "white"),
     legend.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
@@ -468,7 +571,7 @@ ggplot(data=student_funding1 %>%
 
 
 
-#======================ANALYSIS 4============================#
+#======================ANALYSIS 5============================#
 #      Change in student contribution per cluster (%)
 #============================================================#
 #Clean data for plot: Change in student contribution per cluster (%)
@@ -490,6 +593,8 @@ student_funding2 <- funding_data %>%
   mutate(changelabel = round(`change%`*100), 
          changelabel = ifelse(`changelabel` >= 0, paste0("+", `changelabel`, "%"), paste0(`changelabel`, "%")))
 
+student_funding2 <- student_funding2 %>%
+  filter(Year %in% c("2010", "2013", "2021"))
 
 #Create plot: Change in student contribution per cluster (%)
 ggplot(data=student_funding2 %>%
@@ -541,7 +646,8 @@ ggplot(data=student_funding2 %>%
   coord_flip() +
   facet_wrap(~Year) +
   labs(y="Change in funding contribution (%)", 
-       title = "University course fees: change in maximum student contribution by funding cluster, 2010, 2013 & 2021") +
+       title = "University course fees: change in maximum student contribution by funding cluster, 2010, 2013 & 2021",
+       caption = "Source: DESE | Created by: @sarahcgall_") +
   theme(
     plot.margin = margin(1,1,1,1, "cm"),
     plot.background = element_rect(
@@ -551,6 +657,7 @@ ggplot(data=student_funding2 %>%
     axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
     axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
     axis.title.y = element_blank(),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
     legend.position = "bottom",
     legend.background = element_rect(colour = "white"),
     legend.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
@@ -564,52 +671,202 @@ ggplot(data=student_funding2 %>%
 
 
 
-#======================ANALYSIS 5============================#
+#======================ANALYSIS 6============================#
 #             Enrolments for Maths and Science
 #============================================================#
+enrolments <- read_csv("C:/Users/Sarah/RProjects/ausunifees/cleaned/Natural and Physical Sciences - Enrolments.csv", col_names = TRUE)
+
 #Clean data for plot:
-enrolments <- funding_data %>%
-  filter(Year <= "2018" & !`Broad field of education` %in% c("Food, Hospitality and Personal Services","Mixed Field Programmes")) %>%
-  select(`Year`, `Student enrolments: commencing students`, `Student enrolments: not commencing students`, `Award course completions`, `Broad field of education`, `Maximum student contribution amounts`, `Commonwealth contribution amounts`, `Total contribution`) %>%
-  group_by(`Broad field of education`, `Year`) %>%
-  summarise(`Student enrolments: commencing students` = mean(`Student enrolments: commencing students`),
-            `Student enrolments: not commencing students` = mean(`Student enrolments: not commencing students`),
-            `Award course completions` = mean(`Award course completions`),
-            `Maximum student contribution amounts` = mean(`Maximum student contribution amounts`),
-            `Commonwealth contribution amounts` = mean(`Commonwealth contribution amounts`),
-            `Total contribution` = mean(`Total contribution`))
+enrolments1 <- enrolments %>%
+  select(`Enrolment`, `2001`:`2018`) %>%
+  gather("Year", "change$", `2001`:`2018`) %>%
+  mutate(Year = as.numeric(str_replace_all(Year, "%", "")))
+
+enrolments2 <- enrolments %>%
+  mutate(`2002%` = (`2002`-`2001`)/`2001`) %>%
+  mutate(`2003%` = (`2003`-`2002`)/`2002`) %>%
+  mutate(`2004%` = (`2004`-`2003`)/`2003`) %>%
+  mutate(`2005%` = (`2005`-`2004`)/`2004`) %>%
+  mutate(`2006%` = (`2006`-`2005`)/`2005`) %>%
+  mutate(`2007%` = (`2007`-`2006`)/`2006`) %>%
+  mutate(`2008%` = (`2008`-`2007`)/`2007`) %>%
+  mutate(`2009%` = (`2009`-`2008`)/`2008`) %>%
+  mutate(`2010%` = (`2010`-`2009`)/`2009`) %>%
+  mutate(`2011%` = (`2011`-`2010`)/`2010`) %>%
+  mutate(`2012%` = (`2012`-`2011`)/`2011`) %>%
+  mutate(`2013%` = (`2013`-`2012`)/`2012`) %>%
+  mutate(`2014%` = (`2014`-`2013`)/`2013`) %>%
+  mutate(`2015%` = (`2015`-`2014`)/`2014`) %>%
+  mutate(`2016%` = (`2016`-`2015`)/`2015`) %>%
+  mutate(`2017%` = (`2017`-`2016`)/`2016`) %>%
+  mutate(`2018%` = (`2018`-`2017`)/`2017`) %>%
+  select(`Enrolment`, `2002%`:`2018%`) %>%
+  gather("Year", "change%", `2002%`:`2018%`) %>%
+  mutate(Year = str_replace_all(Year, "%", "")) %>%
+  mutate(changelabel = round(`change%`*100, digit = 1),
+         changelabel = ifelse(`changelabel` >= 0, paste0("+", `changelabel`, "%"), paste0(`changelabel`, "%")))
+  
 
 #Create plot: Enrolments for Maths and Science
-enrolments %>%
-  filter(`Broad field of education` == "Natural and Physical Sciences") %>%
-  ggplot(aes(Year, `Award course completions`, fill = "red")) +
-  geom_bar(stat = "identity") +
-  labs(y="Change in funding contribution (%)", 
-       title = "") +
+commencement <- enrolments1 %>%
+  filter(Enrolment == "Commencing students") %>%
+  ggplot(aes(Year, `change$`)) +
+  geom_line(colour = "dodgerblue") +
+  geom_vline(xintercept = 2009, linetype = "dotted") +
+  geom_vline(xintercept = 2013, linetype = "dotted") +
+  scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017)) +
+  scale_y_continuous(limits = c(0,60000), expand = c(0,0)) +
+  labs(x="Year",
+       y= "Number of enrolments",
+       title = "Commencing students",
+       subtitle = "No. of enrolments") +
   theme(
     plot.margin = margin(1,1,1,1, "cm"),
     plot.background = element_rect(
       fill = "white"
     ),
-    plot.title = element_text(face = "plain", size = 12, family = "Calibri Light", hjust = 0, vjust = 3),
+    plot.title = element_text(face = "plain", size = 11, family = "Calibri Light", vjust = 3),
+    plot.subtitle = element_text(face = "plain", size = 10, family = "Calibri Light", vjust = 3),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.title.x = element_blank(),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    legend.position = "none",
+    
+  )
+
+notcommencement <- enrolments1 %>%
+  filter(Enrolment == "Not commencing students") %>%
+  ggplot(aes(Year, `change$`)) +
+  geom_line(colour = "coral2") +
+  geom_vline(xintercept = 2009, linetype = "dotted") +
+  geom_vline(xintercept = 2013, linetype = "dotted") +
+  scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017)) +
+  scale_y_continuous(limits = c(0,60000), expand = c(0,0)) +
+  labs(x="Year",
+       y= "Number of enrolments",
+       title = "Not commencing students",
+       subtitle = "No. of enrolments") +
+  theme(
+    plot.margin = margin(0,0,0,0, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 11, family = "Calibri Light", vjust = 3),
+    plot.subtitle = element_text(face = "plain", size = 10, family = "Calibri Light", vjust = 3),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.title.y = element_blank(),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    legend.position = "none"
+  )
+
+completion <- enrolments1 %>%
+  filter(Enrolment == "Award course completions") %>%
+  ggplot(aes(Year, `change$`)) +
+  geom_line(colour = "springgreen4") +
+  geom_vline(xintercept = 2009, linetype = "dotted") +
+  geom_vline(xintercept = 2013, linetype = "dotted") +
+  scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017)) +
+  scale_y_continuous(limits = c(0,60000), expand = c(0,0), position = "right") +
+  labs(y= "Number of completions",
+       title = "Award course completions",
+       subtitle = "No. of course completions") +
+  theme(
+    plot.margin = margin(1,1,1,1, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 11, family = "Calibri Light", vjust = 3),
+    plot.subtitle = element_text(face = "plain", size = 10, family = "Calibri Light", vjust = 3),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.title.x = element_blank(),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    legend.position = "none"
+  )
+
+
+commencementc <- enrolments2 %>%
+  filter(Enrolment == "Commencing students") %>%
+  ggplot(aes(Year, `change%`)) +
+  geom_bar(stat = "identity", fill = "dodgerblue") +
+  geom_text(data=enrolments2 %>%
+              filter(Enrolment == "Commencing students" & Year %in% c("2009", "2010", "2011", "2012", "2013")),
+            aes(Year, `change%`+0.005, label = changelabel), size = 2.5, family = "Calibri Light") +
+  scale_x_discrete(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017)) +
+  scale_y_continuous(labels = percent, breaks = c(-0.05, 0, 0.05, 0.1, 0.15), limits = c(-0.05, 0.155), expand = c(0,0)) +
+  labs(y= "Change in enrolments (%)",
+       title = "Commencing students",
+       subtitle = "Change in enrolments",
+       caption = "Source: DESE | Created by: @sarahcgall_") +
+  theme(
+    plot.margin = margin(1,1,1,1, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 11, family = "Calibri Light", vjust = 3),
+    plot.subtitle = element_text(face = "plain", size = 10, family = "Calibri Light", vjust = 3),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    axis.title.x = element_blank(),
+    legend.position = "none",
+    
+  )
+
+notcommencementc <- enrolments2 %>%
+  filter(Enrolment == "Not commencing students") %>%
+  ggplot(aes(Year, `change%`)) +
+  geom_bar(stat = "identity", fill = "coral2") +
+  geom_text(data=enrolments2 %>%
+              filter(Enrolment == "Not commencing students" & Year %in% c("2010", "2011", "2012", "2013")),
+            aes(Year, `change%`+0.005, label = changelabel), size = 2.5, family = "Calibri Light") +
+  scale_x_discrete(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017)) +
+  scale_y_continuous(labels = percent, breaks = c(-0.05, 0, 0.05, 0.1, 0.15), limits = c(-0.05, 0.155), expand = c(0,0)) +
+  labs(x="Year",
+       title = "Not commencing students",
+       subtitle = "Change in enrolments") +
+  theme(
+    plot.margin = margin(0,0,0,0, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 11, family = "Calibri Light", vjust = 3),
+    plot.subtitle = element_text(face = "plain", size = 10, family = "Calibri Light", vjust = 3),
     axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
     axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
     axis.title.y = element_blank(),
-    legend.position = element_blank()
+    legend.position = "none"
   )
 
-enrolments %>%
-  filter(`Broad field of education` == "Natural and Physical Sciences") %>%
-  ggplot(aes(Year, `Student enrolments: not commencing students`, fill = "blue")) +
-  geom_bar(stat = "identity")
+completionc <- enrolments2 %>%
+  filter(Enrolment == "Award course completions") %>%
+  ggplot(aes(Year, `change%`)) +
+  geom_bar(stat = "identity", fill = "springgreen4") +
+  geom_text(data=enrolments2 %>%
+              filter(Enrolment == "Award course completions" & Year %in% c("2010", "2011", "2012", "2013")),
+            aes(Year, `change%`+0.005, label = changelabel), size = 2.5, family = "Calibri Light") +
+  scale_x_discrete(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017)) +
+  scale_y_continuous(labels = percent, breaks = c(-0.05, 0, 0.05, 0.1, 0.15), limits = c(-0.05, 0.155), expand = c(0,0),
+                     position = "right") +
+  labs(y= "Change in completions (%)",
+       title = "Award course completions",
+       subtitle = "Change in course completions") +
+  theme(
+    plot.margin = margin(1,1,1,1, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 11, family = "Calibri Light", vjust = 3),
+    plot.subtitle = element_text(face = "plain", size = 10, family = "Calibri Light", vjust = 3),
+    axis.title.y.right = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.title.x = element_blank(),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    legend.position = "none"
+  )
 
-enrolments %>%
-  filter(`Broad field of education` == "Natural and Physical Sciences") %>%
-  ggplot(aes(Year, `Student enrolments: commencing students`, fill = "blue")) +
-  geom_bar(stat = "identity")
 
-
-
+enrolment <- ggarrange(commencement, notcommencement, completion, commencementc, notcommencementc, completionc, 
+          heights = c(2, 2), widths = c(3,3), ncol = 3, nrow = 2, align = "hv")
+annotate_figure(enrolment, top = text_grob("Number and change in enrolments and completions of the broad natural and physical sciences discipline per year", face = "plain", size = 14, family = "Calibri Light"))
 
 
 
