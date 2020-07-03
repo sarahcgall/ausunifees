@@ -9,6 +9,7 @@ library(scales)
 library(networkD3)
 library(ggpubr)
 library(forcats)
+library(ggrepel)
 #============================================================#
 
 
@@ -63,6 +64,15 @@ funding_data <- cleaned_data %>%
 #======================ANALYSIS 1============================#
 #      Sankey Diagram: Funding change 2020 - 2021
 #============================================================#
+#Summary statistics
+funding_data %>%
+  filter(Year == "2021" & Type == "Old" | Year == "2021" & Type == "New") %>%
+  select(Year, `Part funding cluster`, `Total contribution`, Type) %>%
+  group_by(`Part funding cluster`, Year, Type) %>%
+  summarise(total_mean = mean(`Total contribution`)) %>%
+  pivot_wider(names_from = c(Year, Type), values_from = total_mean) %>%
+  mutate(change = `2021_New` - `2021_Old`)
+
 #Clean data for plot: Funding change 2020 - 2021
 #NB. excuse the messy code - haven't learnt how to do matrices in r yet...
 sankey <- funding_data %>%
@@ -72,6 +82,7 @@ sankey <- funding_data %>%
   summarise(total_mean = mean(`Total contribution`)) %>%
   pivot_wider(names_from = Year, values_from = total_mean) %>%
   mutate(change = `2021` - `2020`)
+
 
 neg <- sankey %>% filter(change <= 0)
 pos <- sankey %>% filter(change >= 0)
@@ -422,27 +433,51 @@ gosl2_data %>%
     panel.grid.minor.x = element_blank()
   )
 
- 
-geom_segment(aes(x= `Study area`, 
-                 y = `FTE (%)   +3 months`+0.6, 
-                 xend = `Study area`, 
-                 yend = `FTE (%)  +3-4 years`-1.1),
-             size = 1, alpha = 0.5, arrow = arrow(length = unit(0.3, "cm")))
- 
+
+
+#median starting salary and FTE%
+funding_data %>%
+  filter(Year == "2018") %>%
+  select(Year, `Study area name`, `FTE +1yr (%)`, `Median starting salary +1yr ($)`, `Maximum student contribution amounts`) %>%
+  group_by(Year, `Study area name`) %>%
+  summarise(`FTE +1yr (%)` = mean(`FTE +1yr (%)`), `Median starting salary +1yr ($)` = mean(`Median starting salary +1yr ($)`), `Maximum student contribution amounts` = mean(`Maximum student contribution amounts`)) %>%
+  ggplot(aes(`Maximum student contribution amounts`, `Median starting salary +1yr ($)`, colour = `Study area name`, size = `FTE +1yr (%)`, label = `Study area name`)) +
+  geom_point(shape = 1) +
+  geom_text_repel(colour = "black", size = 2.5, point.padding = 0.25, alpha = 0.8) +
+  scale_y_continuous(labels = dollar) +
+  scale_x_continuous(limits = c(5000, 12000), labels = dollar)+
+  labs(x="Maximum student contribution amount ($)", 
+       y="Median starting salary ($)", 
+       title = "Proportion of graduates in full-time employment (FTE) and median starting salary, 3 months & 3-4 years after graduation by study area",
+       caption = "Source: QILT | Created by: @sarahcgall_") +
+  theme(
+    plot.margin = margin(1,1,1,1, "cm"),
+    plot.background = element_rect(
+      fill = "white"
+    ),
+    plot.title = element_text(face = "plain", size = 14, family = "Calibri Light", hjust = 0.5, vjust = 3),
+    axis.title = element_text(face = "plain", size = 10, family = "Calibri Light"),
+    axis.text = element_text(face = "plain", size = 9, family = "Calibri Light"),
+    axis.text.x = element_text(angle = 90),
+    plot.caption = element_text(face = "plain", size = 9, family = "Calibri Light", hjust = 0),
+    legend.position = "none",
+    strip.text.x = element_text(face = "plain", size = 8.6, family = "Calibri Light"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+
+
 #Create plot: Proportion of FTE, 1 & 4 years after graduation by study area, 2015
 gosl_data %>%
   filter(`Study area` != "All study areas") %>%
-  arrange(desc(`FTE Extent to which skills and education not fully utilised (%)`)) %>%
-  ggplot(aes(`Study area`, `FTE Extent to which skills and education not fully utilised (%)`, fill = `Study area`)) +
-  geom_bar(stat = "identity") +
-  facet_grid(Type~`Years after graduation`) +
-  scale_y_continuous(limit = c(0,70), expand = c(0,0)) +
+  ggplot(aes(`FTE (%)`,`FTE median salary ($)`, colour = `Study area`)) +
+  geom_point() +
   labs(x="", 
        y="FTE (%)", 
        title = "Proportion of FTE, 1 & 4 years after graduation by study area, 2015",
        fill = "Years after graduation",
        caption = "Source: DESE | Created by: @sarahcgall_") +
-  coord_flip() +
+  facet_grid(Type~`Time after graduation`) +
   theme(
     plot.margin = margin(1,1,1,1, "cm"),
     plot.background = element_rect(
