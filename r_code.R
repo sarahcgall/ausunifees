@@ -10,6 +10,9 @@ library(networkD3)
 library(ggpubr)
 library(forcats)
 library(ggrepel)
+library(broom)
+library(sandwich)
+library(fUnitRoots)
 #============================================================#
 
 
@@ -467,13 +470,14 @@ funding_data %>%
   )
 
 
+
 #Create plot: Proportion of FTE, 1 & 4 years after graduation by study area, 2015
 gosl_data %>%
   filter(`Study area` != "All study areas") %>%
   ggplot(aes(`FTE (%)`,`FTE median salary ($)`, colour = `Study area`)) +
   geom_point() +
-  labs(x="", 
-       y="FTE (%)", 
+  labs(x="FTE (%)", 
+       y="Starting median salary", 
        title = "Proportion of FTE, 1 & 4 years after graduation by study area, 2015",
        fill = "Years after graduation",
        caption = "Source: DESE | Created by: @sarahcgall_") +
@@ -714,7 +718,7 @@ enrolments <- read_csv("C:/Users/Sarah/RProjects/ausunifees/cleaned/Natural and 
 #Clean data for plot:
 enrolments1 <- enrolments %>%
   select(`Enrolment`, `2001`:`2018`) %>%
-  gather("Year", "change$", `2001`:`2018`) %>%
+  gather("Year", "n", `2001`:`2018`) %>%
   mutate(Year = as.numeric(str_replace_all(Year, "%", "")))
 
 enrolments2 <- enrolments %>%
@@ -745,7 +749,7 @@ enrolments2 <- enrolments %>%
 #Create plot: Enrolments for Maths and Science
 commencement <- enrolments1 %>%
   filter(Enrolment == "Commencing students") %>%
-  ggplot(aes(Year, `change$`)) +
+  ggplot(aes(Year, `n`)) +
   geom_line(colour = "dodgerblue") +
   geom_vline(xintercept = 2009, linetype = "dotted") +
   geom_vline(xintercept = 2013, linetype = "dotted") +
@@ -771,7 +775,7 @@ commencement <- enrolments1 %>%
 
 notcommencement <- enrolments1 %>%
   filter(Enrolment == "Not commencing students") %>%
-  ggplot(aes(Year, `change$`)) +
+  ggplot(aes(Year, `n`)) +
   geom_line(colour = "coral2") +
   geom_vline(xintercept = 2009, linetype = "dotted") +
   geom_vline(xintercept = 2013, linetype = "dotted") +
@@ -796,7 +800,7 @@ notcommencement <- enrolments1 %>%
 
 completion <- enrolments1 %>%
   filter(Enrolment == "Award course completions") %>%
-  ggplot(aes(Year, `change$`)) +
+  ggplot(aes(Year, `n`)) +
   geom_line(colour = "springgreen4") +
   geom_vline(xintercept = 2009, linetype = "dotted") +
   geom_vline(xintercept = 2013, linetype = "dotted") +
@@ -904,7 +908,34 @@ enrolment <- ggarrange(commencement, notcommencement, completion, commencementc,
 annotate_figure(enrolment, top = text_grob("Number and change in enrolments and completions of the broad natural and physical sciences discipline per year", face = "plain", size = 14, family = "Calibri Light"))
 
 
+#============================================================#
+#ARIMA model
+arimadata <- enrolments1 %>%
+  filter(Enrolment == "Commencing students" & Year >= 2010) %>%
+  select(n) %>%
+  ts(start = c(2010, 1), frequency = 1)
 
+plot(arimadata)
+
+my_urkpssTest <- function (x, type, lags, use.lag, doplot) {
+  x <- as.vector(x)
+  urca <- urca::ur.kpss(x, type = type[1], lags = lags[1], use.lag = use.lag)
+  output = capture.output(urca::summary(urca))[-(1:4)]
+  output = output[-length(output)]
+  for (i in 1:length(output)) output[i] = paste(" ", output[i])
+  ans = list(name = "ur.kpss", test = urca, output = output)
+  if (doplot) 
+    plot(urca)
+  new("fHTEST", call = match.call(), data = list(x = x), 
+      test = ans, title = "KPSS Unit Root Test", description = description())
+}
+my_urkpssTest(arimadata, type = c("tau"), lags = c("short"),use.lag = NULL, doplot = TRUE)
+
+plot(diff(arimadata, differences=1))
+acf(arimadata,lag.max=34)
+acf(diff(arimadata, differences=1))
+pacf(arimadata, lag.max=34)
+pacf(diff(arimadata, differences=1))
 
 
 

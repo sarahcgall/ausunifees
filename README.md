@@ -1,5 +1,5 @@
 # An analysis of the Australian Government's proposed university fee changes
-On 19 July 2020, the Hon Dan Tehan MP ([\@DanTehanWannon](https://twitter.com/dantehanwannon)), Minister for Education , and Senator the Hon Michaelia Cash ([\@SenatorCash](https://twitter.com/senatorcash)), Minister for Employment, Skills, Small and Family Business, announced the Job-ready Graduates Package (*[Tehan & Cash, Media Release, 19/06/20](https://ministers.dese.gov.au/tehan/job-ready-graduates-power-economic-recovery)*). This package aims to link the public investment in higher education with national priorities to ensure that more graduates are able to enter the workforce in sectors where employment opportunities are expected to grow and in regions where there are workforce shortages. 
+On 19 July 2020, the Hon Dan Tehan MP ([\@DanTehanWannon](https://twitter.com/dantehanwannon)), Minister for Education, and Senator the Hon Michaelia Cash ([\@SenatorCash](https://twitter.com/senatorcash)), Minister for Employment, Skills, Small and Family Business, announced the Job-ready Graduates Package (*[Tehan & Cash, Media Release, 19/06/20](https://ministers.dese.gov.au/tehan/job-ready-graduates-power-economic-recovery)*). This package aims to link the public investment in higher education with national priorities to ensure that more graduates are able to enter the workforce in sectors where employment opportunities are expected to grow and in regions where there are workforce shortages. 
 
 
 Under this package, the Australian Government has proposed a series of measures, including:
@@ -66,10 +66,9 @@ An analysis of current funding found that some degrees were being over-funded an
 
 The previously over-funded study areas include agriculture, allied health, behavioural science and social studies, clinical psychology, communications, education, environmental studies, mathematics and statistics, nursing, and science, engineering and surveying. These disciplines would receive a reduction in overall funding of between \$744 and \$9,341 (*mean = \$3,239*). The previously under-funded study areas, including computing, built environments and other health, creative arts, English, humanities, languages, law, accounting, administraion, economics and commerce, and dentistry, medicine and vetinary science, would receive an increase in overall funding of between \$208 and \$4,400 (*mean = \$2,121*).
 
+***Figure 1 Redistribution of overall funding from 2020 to 2021 by part funding cluster:*** *The figures below show the redistribution of funding from 2020 to the proposed funding in 2021 for each part funding cluster.*
 
 ![RedistributionPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/RedistributionPlot.png)
-
-***Figure 1 Redistribution of overall funding from 2020 to 2021 by part funding cluster:*** *The figures above show the redistribution of funding from 2020 to the proposed funding in 2021 for each part funding cluster.*
 
 
 An analysis of the overall cost of teaching each course, the emerging  employment priority areas, and the public and private benefits expected to be gained from students studying one course compared to another informed the proposed adjustments to the Commonwealth and maximum student contribution amounts for 2021. **By reducing the maximum student contribution amount for courses that align with key growth areas, the government hopes to incentivise prospective students to make more job-relevant education decisions** which leads to:
@@ -83,31 +82,33 @@ An analysis of the overall cost of teaching each course, the emerging  employmen
 
 XXX
 
-![FTESalaryPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FTESalaryPlot.png)
+***Figure 2 Proportion of graduates in full-time employment (FTE) and median starting salary, 3 months & 3-4 years after graduation by study area:*** *The figures below show the XXX.*
 
-***Figure 2 Proportion of graduates in full-time employment (FTE) and median starting salary, 3 months & 3-4 years after graduation by study area:*** *The figures above show the XXX.*
+![FTESalaryPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FTESalaryPlot.png)
 
 
 In order to incentivise students, the government has proposed to reduce the course costs for students studying agriculture, allied health, clinical psychology, computing, built environment and other health, education, english, environmental studies, languages, mathematics and statistics, nursing, science, engineering and surveying between \$1,827 and \$5,827 (*mean = \$3,080*). This is offset by those studying behavioural science and political science, communications, creative arts, humanities, and law, accounting, administration, economics and commerce which would see increases of between \$1,016 and \$7,816 (*mean = \$5,562*).
 
+***Figure 3 University course fees: student and Commonwealth contribution amounts by funding cluster and year:*** *The figures below show the Commonwealth and maximum student contribution amounts for each part funding cluster between 2009 and the projected 2021 proposal.*
+
 ![FundingPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FundingPlot.png)
 
-***Figure 3 University course fees: student and Commonwealth contribution amounts by funding cluster and year:*** *The figures above show the Commonwealth and maximum student contribution amounts for each part funding cluster between 2009 and the projected 2021 proposal.*
 
 
 #### What changes have occurred previously?
 Over the past decade, although students have not had a decrease in the amount that they contribute to their course costs, they have benefitted from few changes with indexed rate increases. 
 
+***Figure 4 University course fees: change in maximum student contribution by funding cluster and year:*** *The figures below show the XXX.*
+
 ![FundingChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/FundingChangePlot.png)
 
-***Figure 4 University course fees: change in maximum student contribution by funding cluster and year:*** *The figures above show the XXX.*
 
 
 This however, is with the exception of four increases above the indexed rates in 2010 and 2013 under the then-Labor Government. These increases affected students studying nursing (*+\$1,148 (+28%)*), eduction (*+\$1,148 (+28%)*), science, engineering and surveying (*+\$2,078 (+33%)*), and mathematics and statistics (*+\$3,843 (+85%)*). 
 
-![ChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/ChangePlot.png)
+***Figure 5 University course fees: change in maximum student contribution by funding cluster, 2010, 2013 & 2021:*** *The figures below show the XXX.*
 
-***Figure 5 University course fees: change in maximum student contribution by funding cluster, 2010, 2013 & 2021:*** *The figures above show the XXX.*
+![ChangePlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/ChangePlot.png)
 
 
 
@@ -126,9 +127,10 @@ This election commitment was honoured and subsequently implemented on 1 January 
 
 The broad natural and physical sciences discipline, in which sciences and mathematics fall within, increased the number of commencing student (first year students) enrolments by 13.2% in 2009 and 14.3% in 2010. The number of not commencing student (second and third year students) enrolments increased by 5.5% in 2010 and 8.6% in 2011. The number of award course completions (graduating students) also increased by 5.9% in 2010 and 5.4% in 2011.
 
+***Figure 6 Number and change in enrolments and completions of the broad natural and physical sciences disciplines per year:*** *The figures below show the immediate affect that reducing the student contribution from science and mathematics had on enrolment numbers.*
+
 ![EnrolmentsPlot](https://github.com/sarahcgall/ausunifees/blob/master/figs/EnrolmentsPlot.png)
 
-***Figure 6 Number and change in enrolments and completions of the broad natural and physical sciences disciplines per year:*** *The figures above show the immediate affect that reducing the student contribution from science and mathematics had on enrolment numbers.*
 
 
 In the annual higher education report on undergraduate applications, offers and acceptances in 2010, the Department of Education, Employment and Workplace Relations stated that the immediate growth in natural and physical sciences enrolments followed the decision by the Labor Party to incentivise students by reducing their student contribution.
